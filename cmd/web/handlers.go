@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"snippetbox/internal/models"
 	"strconv"
@@ -20,10 +19,10 @@ func (app *application) home(w http.ResponseWriter, r *http.Request) {
 		app.serverError(w, err)
 		return
 	}
-	for _, snippet := range snippets {
-		fmt.Fprintf(w, "%+v\n", snippet)
-	}
 
+	app.render(w, http.StatusOK, "home.tmpl", &templateData{
+		Snippets: snippets,
+	})
 }
 
 func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
@@ -42,8 +41,11 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	}
-	// Write the snippet data as a plain-text HTTP response body.
-	fmt.Fprintf(w, "%+v", snippet)
+
+	app.render(w, http.StatusOK, "view.tmpl", &templateData{
+		Snippet: snippet,
+	})
+
 }
 
 func (app *application) createSnippet(w http.ResponseWriter, r *http.Request) {

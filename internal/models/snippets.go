@@ -9,11 +9,11 @@ import (
 // Define a Snippet type to hold the data for an individual snippet.
 // Notice how the fields of the struct correspond to the fields in our MySQL snippets table.
 type Snippet struct {
-	id         int
-	title      string
-	content    string
-	created_at time.Time
-	expires    time.Time
+	ID         int
+	Title      string
+	Content    string
+	Created_at time.Time
+	Expires    time.Time
 }
 
 // Define a SnippetModel type which wraps a sql.DB connection pool.
@@ -63,7 +63,7 @@ func (m *SnippetModel) Get(id int) (*Snippet, error) {
 	// and the number of arguments must be exactly the same as the number of
 	// columns returned by your statement.
 
-	err := row.Scan(&s.id, &s.title, &s.content, &s.created_at, &s.expires)
+	err := row.Scan(&s.ID, &s.Title, &s.Content, &s.Created_at, &s.Expires)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return nil, ErrNoRecord
@@ -80,7 +80,7 @@ func (m *SnippetModel) Get(id int) (*Snippet, error) {
 func (m *SnippetModel) Latest() ([]*Snippet, error) {
 	// Write the SQL statement we want to execute.
 	stmt := `SELECT id, title, content, created_at, expires FROM snippets
-	WHERE expires > UTC_TIMESTAMP() ORDER BY id DESC LIMIT 20`
+	WHERE expires > UTC_TIMESTAMP() ORDER BY id ASC LIMIT 20`
 
 	// Use the Query() method on the connection pool to execute our SQL statement.
 	// This returns a sql.Rows resultset containing the result of our query.
@@ -103,7 +103,7 @@ func (m *SnippetModel) Latest() ([]*Snippet, error) {
 
 		s := &Snippet{}
 
-		err = rows.Scan(&s.id, &s.title, &s.content, &s.created_at, &s.expires)
+		err = rows.Scan(&s.ID, &s.Title, &s.Content, &s.Created_at, &s.Expires)
 		if err != nil {
 			return nil, err
 		}
