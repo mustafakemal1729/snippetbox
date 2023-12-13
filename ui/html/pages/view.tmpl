@@ -12,8 +12,8 @@
 
     <pre><code>{{ .Snippet.Content }}</code></pre>
     <div class="metadata">
-        <time>Created: {{ .Snippet.Created_at }}</time>
-        <time>Expires: {{ .Snippet.Expires }}</time>
+        <time>Created: {{ humanDate .Snippet.Created_at }}</time>
+        <time>Expires: {{ humanDate .Snippet.Expires }}</time>
     </div>
 </div>
 
