@@ -16,3 +16,14 @@ The original sample was changed while writing to learn how to use other third-pa
   - **cobra**: Command-line support for enhanced functionality.
   - **viper**: Flags and file configuration for flexible setup.
   - **goland-migrate**: SQL database migration for easy versioning and updates.
+  - **justinas/alice**: Painless middleware chaining for Go.
+  - **justinas/nosurf**: CSRF protection for Go web applications.
+
+### Running
+
+```
+  cd snippetbox
+  go run cmd/web/*
+  go test -v cmd/web/   ( to run the tests )
+  
+```
