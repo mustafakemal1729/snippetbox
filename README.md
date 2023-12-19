@@ -18,6 +18,7 @@ The original sample was changed while writing to learn how to use other third-pa
   - **goland-migrate**: SQL database migration for easy versioning and updates.
   - **justinas/alice**: Painless middleware chaining for Go.
   - **justinas/nosurf**: CSRF protection for Go web applications.
+  - **julienschmidt/httprouter**: Efficient router for handling HTTP requests.
 
 ### Running
 
