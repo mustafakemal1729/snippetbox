@@ -20,7 +20,7 @@ func (app *application) routes() http.Handler {
 
 	// Register other application routes.
 	router.HandlerFunc(http.MethodGet, "/", app.home)
-	router.HandlerFunc(http.MethodGet, "/snippet/view/:id", app.snippetView)
+	router.HandlerFunc(http.MethodGet, "/snippet/:id", app.snippetView)
 
 	// Use POST for creating a new snippet (resource-oriented URL).
 	router.HandlerFunc(http.MethodPost, "/snippets", app.snippetCreate)
