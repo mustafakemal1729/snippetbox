@@ -2,9 +2,8 @@
 
 ## Overview
 
-Snippetbox is a CRUD (Create, Read, Update, Delete) web application built with Go, MySQL, Bootstrap, and JavaScript. It serves as a training project to learn how to build production-ready web applications with Go, inspired by the concepts introduced in Alex Edwards' "Let’s Go" book.
+Snippetbox is a CRUD (Create, Read, Update, Delete) web application built with Go, MySQL, Bootstrap, and JavaScript. It serves as a training project to learn how to build production-ready web applications with Go, inspired by the concepts introduced in Alex Edwards "Let’s Go" book.
 
-The original sample was changed while writing to learn how to use other third-party Go libraries and to enhance the web application.
 
 ## Features
 
