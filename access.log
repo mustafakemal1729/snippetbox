@@ -1,4 +1,0 @@
-2023/12/24 10:16:16 [::1]:61708 -- HTTP/1.1 GET / localhost:4000 
-2023/12/24 10:16:18 [::1]:61708 -- HTTP/1.1 GET /snippet/1 localhost:4000 
-2023/12/24 10:16:18 [::1]:61708 -- HTTP/1.1 GET /favicon.ico localhost:4000 
-2023/12/24 10:17:03 [::1]:61880 -- HTTP/1.1 GET /snippet/1 localhost:4000 
