@@ -27,7 +27,8 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/snippet/:id", app.snippetView)
 
 	// Use POST for creating a new snippet (resource-oriented URL).
-	router.HandlerFunc(http.MethodPost, "/snippet", app.snippetCreate)
+	router.HandlerFunc(http.MethodGet, "/snippet", app.snippetCreate)
+	router.HandlerFunc(http.MethodPost, "/snippet", app.snippetCreateNote)
 
 	// Middleware chain containing 'standard' middleware.
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
