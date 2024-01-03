@@ -18,17 +18,21 @@ func (app *application) routes() http.Handler {
 
 	// Create a file server to serve static files from the "./ui/static" directory.
 	fileServer := http.FileServer(http.Dir("./ui/static"))
-
 	// Serve static files from the "/static" path.
 	router.Handler(http.MethodGet, "/static/*filepath", http.StripPrefix("/static", fileServer))
 
+	// Create a new middleware chain containing the middleware specific to our
+	// dynamic application routes. For now, this chain will only contain the
+	// LoadAndSave session middleware but we'll add more to it later.
+	dynamic := alice.New(app.sessionManager.LoadAndSave)
+
 	// Register other application routes.
-	router.HandlerFunc(http.MethodGet, "/", app.home)
-	router.HandlerFunc(http.MethodGet, "/snippet/:id", app.snippetView)
+	router.Handler(http.MethodGet, "/", dynamic.ThenFunc(app.home))
+	router.Handler(http.MethodGet, "/snippet/:id", dynamic.ThenFunc(app.snippetView))
 
 	// Use POST for creating a new snippet (resource-oriented URL).
-	router.HandlerFunc(http.MethodGet, "/snippet", app.snippetCreate)
-	router.HandlerFunc(http.MethodPost, "/snippet", app.snippetCreateNote)
+	router.Handler(http.MethodGet, "/snippet", dynamic.ThenFunc(app.snippetCreate))
+	router.Handler(http.MethodPost, "/snippet", dynamic.ThenFunc(app.snippetCreateNote))
 
 	// Middleware chain containing 'standard' middleware.
 	standardMiddleware := alice.New(app.recoverPanic, app.logRequest, secureHeaders)
