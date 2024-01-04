@@ -12,6 +12,7 @@ func (app *application) routes() http.Handler {
 	// Create a new router instance from httprouter.
 	router := httprouter.New()
 
+	// Handle 404 errors with the notFound function.
 	router.NotFound = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		app.notFound(w)
 	})
@@ -27,11 +28,17 @@ func (app *application) routes() http.Handler {
 	dynamic := alice.New(app.sessionManager.LoadAndSave)
 
 	// Register other application routes.
+	// Home route
 	router.Handler(http.MethodGet, "/", dynamic.ThenFunc(app.home))
+
+	// Snippet view route
 	router.Handler(http.MethodGet, "/snippet/:id", dynamic.ThenFunc(app.snippetView))
 
 	// Use POST for creating a new snippet (resource-oriented URL).
+	// Snippet create route
 	router.Handler(http.MethodGet, "/snippet", dynamic.ThenFunc(app.snippetCreate))
+
+	// Snippet create note route
 	router.Handler(http.MethodPost, "/snippet", dynamic.ThenFunc(app.snippetCreateNote))
 
 	// Middleware chain containing 'standard' middleware.
