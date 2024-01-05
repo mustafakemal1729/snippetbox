@@ -1,10 +1,8 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"net/http"
-	"snippetbox/internal/models"
 	"snippetbox/internal/validator"
 	"strconv"
 
@@ -20,8 +18,8 @@ type snippetCreateForm struct {
 }
 
 func (form *snippetCreateForm) Validate() {
-	maxCharLength := 50
 
+	maxCharLength := 50
 	form.CheckField(validator.NotBlank(form.Title), "title", "This field cannot be blank.")
 	form.CheckField(validator.MaxChars(form.Title, maxCharLength), "title", "This field cannot be more than 50 char long.")
 	form.CheckField(validator.NotBlank(form.Content), "content", "This field cannot be blank.")
@@ -29,19 +27,6 @@ func (form *snippetCreateForm) Validate() {
 }
 
 type appHandler func(http.ResponseWriter, *http.Request) error
-
-// handle is a wrapper that simplifies error handling for HTTP handlers.
-func (fn appHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	err := fn(w, r)
-	if err != nil {
-		switch {
-		case errors.Is(err, models.ErrNoRecord):
-			http.NotFound(w, r)
-		default:
-			http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		}
-	}
-}
 
 // home handles the home page.
 func (app *application) home(w http.ResponseWriter, r *http.Request) {
@@ -63,7 +48,8 @@ func (app *application) snippetView(w http.ResponseWriter, r *http.Request) {
 	params := httprouter.ParamsFromContext(r.Context())
 	id, err := strconv.Atoi(params.ByName("id"))
 	if err != nil || id < 1 {
-		errors.New("invalid ID parameter")
+		http.NotFound(w, r)
+		return
 	}
 
 	snippet, err := app.snippets.Get(id)
@@ -101,11 +87,13 @@ func (app *application) snippetCreateNote(w http.ResponseWriter, r *http.Request
 		data := app.newTemplateData(r)
 		data.Form = form
 		app.render(w, http.StatusUnprocessableEntity, "form.tmpl", data)
+		return
 	}
 
 	id, err := app.snippets.Insert(form.Title, form.Content, form.Expires)
 	if err != nil {
 		app.serverError(w, err)
+		return
 	}
 
 	app.sessionManager.Put(r.Context(), "flash", "Note successfully created!")
