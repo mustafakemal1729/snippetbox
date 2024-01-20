@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/tls"
 	"database/sql" // New import
 	"flag"
 	"html/template"
@@ -68,6 +69,10 @@ func main() {
 	sessionManager.Store = mysqlstore.New(db)
 	sessionManager.Lifetime = 1 * time.Hour
 
+	tlsConfig := &tls.Config{
+		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+	}
+
 	app := &application{
 		errorLog:       errorLog,
 		infoLog:        infoLog,
@@ -82,14 +87,19 @@ func main() {
 		Addr:     *addr,
 		ErrorLog: errorLog,
 		// Call the new app.routes() method to get the servemux containing our routes.
-		Handler: app.routes(),
+		Handler:   app.routes(),
+		TLSConfig: tlsConfig,
+		// Add Idle, Read and Write timeouts to the server.
+		IdleTimeout:  time.Minute,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
 	}
 
 	// The value returned from the flag.String() function is a pointer to the flag value,
 	// not the value itself. So we need to dereference the pointer before using it.
 	infoLog.Printf("Starting server on %s", *addr)
 
-	err = server.ListenAndServe()
+	err = server.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 }
 
