@@ -11,7 +11,7 @@ Snippetbox is a CRUD (Create, Read, Update, Delete) web application built with G
 - **Third-party Libraries**:
   - **zerolog**: Fast and structured logging.
   - **lumberjack**: Log rolling files for efficient log management.
-  - **goland-migrate**: SQL database migration for easy versioning and updates.
+  - **golang-migrate**: SQL database migration for easy versioning and updates.
   - **justinas/alice**: Painless middleware chaining for Go.
   - **justinas/nosurf**: CSRF protection for Go web applications.
   - **julienschmidt/httprouter**: Efficient router for handling HTTP requests.
