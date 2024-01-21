@@ -2,7 +2,7 @@ package main
 
 import (
 	"crypto/tls"
-	"database/sql" // New import
+	"database/sql"
 	"flag"
 	"html/template"
 	"log"
@@ -18,7 +18,6 @@ import (
 )
 
 // Define an application struct to hold the application-wide dependencies
-
 type application struct {
 	errorLog       *log.Logger
 	infoLog        *log.Logger
@@ -32,11 +31,12 @@ func main() {
 
 	addr := flag.String("addr", ":4000", "HTTP network address")
 	flag.Parse()
+
 	// dsn as Data Source Name, we pass dsn as a parameter to sql.Open()
 	dsn := flag.String("dsn", "user:password@/notes?parseTime=true", "MySQL Database Connection")
 
 	// Use log.New() to create a logger for writing information messages.
-	// Note that the flags are joined using the bitwise OR operator |.
+	// Note that the flags are joined using the bitwise OR operator "|"
 	infoLog := log.New(os.Stdout, "INFO\t", log.Ldate|log.Ltime)
 
 	// Create a logger for writing error messages in the same way, but use stderr as
@@ -51,13 +51,13 @@ func main() {
 	// before the main() function exits.
 	defer db.Close()
 
-	// Initialize a new template cache...
+	// Initialize a new template cache
 	templateCache, err := newTemplateCache()
 	if err != nil {
 		errorLog.Fatal(err)
 	}
 
-	// Initialize a decoder instance...
+	// Initialize a decoder instance
 	formDecoder := form.NewDecoder()
 
 	// Use the scs.New() function to initialize a new session manager.
@@ -68,7 +68,8 @@ func main() {
 	sessionManager.Lifetime = 1 * time.Hour
 
 	tlsConfig := &tls.Config{
-		CurvePreferences: []tls.CurveID{tls.X25519, tls.CurveP256},
+		PreferServerCipherSuites: true,
+		CurvePreferences:         []tls.CurveID{tls.X25519, tls.CurveP256},
 	}
 
 	app := &application{
@@ -82,21 +83,16 @@ func main() {
 
 	// Initialize a new http.Server struct
 	server := &http.Server{
-		Addr:     *addr,
-		ErrorLog: errorLog,
-		// Call the new app.routes() method to get the servemux containing our routes.
-		Handler:   app.routes(),
-		TLSConfig: tlsConfig,
-		// Add Idle, Read and Write timeouts to the server.
+		Addr:         *addr,
+		ErrorLog:     errorLog,
+		Handler:      app.routes(),
+		TLSConfig:    tlsConfig,
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  5 * time.Second,
 		WriteTimeout: 10 * time.Second,
 	}
 
-	// The value returned from the flag.String() function is a pointer to the flag value,
-	// not the value itself. So we need to dereference the pointer before using it.
 	infoLog.Printf("Starting server on %s", *addr)
-
 	err = server.ListenAndServeTLS("./tls/cert.pem", "./tls/key.pem")
 	errorLog.Fatal(err)
 }

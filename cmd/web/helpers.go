@@ -44,7 +44,7 @@ func (app *application) render(w http.ResponseWriter, status int, page string, d
 	// Write the template to the buffer instead of straight to the
 	// http.ResponseWriter. If there's an error, call our serverError() helper
 	// and then return.
-	err := ts.ExecuteTemplate(buf, "base.tmpl", data)
+	err := ts.ExecuteTemplate(buf, "base", data)
 	if err != nil {
 		app.serverError(w, err)
 		return
