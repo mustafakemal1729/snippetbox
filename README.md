@@ -19,6 +19,7 @@ Snippetbox is a CRUD (Create, Read, Update, Delete) web application built with G
 ### Running
 
 ```
+
   cd snippetbox
   go run cmd/web/*
   go test -v cmd/web/   ( to run the tests )
